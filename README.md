@@ -9,6 +9,7 @@
 5. change .env values - DB to be precise
 6. Make a database (mysql)
 7. use this lib tymon/jwt-auth form github in order to use JWT auth in this website
+8. https://github.com/apility/Laravel-FCM for the push notifications
 
 #### If you just cloned OR database changed
 

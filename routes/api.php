@@ -2,7 +2,11 @@
 
 use Illuminate\Http\Request;
 
-
+use LaravelFCM\Message\Topics;
+use LaravelFCM\Message\OptionsBuilder;
+use LaravelFCM\Message\PayloadDataBuilder;
+use LaravelFCM\Message\PayloadNotificationBuilder;
+use LaravelFCM\Facades\FCM;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,6 +30,28 @@ Route::group(['middleware' => ['api'],'prefix' => 'auth'], function () {
     Route::post('me', 'AuthController@me');
 });
     
-Route::get('pushNotification/{msg}', function($msg){
+Route::get('pushNotification/{title}/{msg}', function($title,$msg){
+    $notificationBuilder = new PayloadNotificationBuilder($title);
+    $notificationBuilder->setBody($msg)
+                        ->setSound('default');
 
+    $notification = $notificationBuilder->build();
+
+    $topic = new Topics();
+    $topic->topic('marketing');
+
+    $topicResponse = FCM::sendToTopic($topic, null, $notification, null);
+
+    if($topicResponse->isSuccess())
+    {
+        return response()->json('notification has been sent',200);
+    }
+    else {
+
+         $topicResponse->shouldRetry();
+        if($topicResponse->error()){
+        return response()->json('notification has not been sent',400);
+
+        } 
+    }
 });
