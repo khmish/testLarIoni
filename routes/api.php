@@ -26,3 +26,6 @@ Route::group(['middleware' => ['api'],'prefix' => 'auth'], function () {
     Route::post('me', 'AuthController@me');
 });
     
+Route::get('pushNotification/{msg}', function($msg){
+
+});
